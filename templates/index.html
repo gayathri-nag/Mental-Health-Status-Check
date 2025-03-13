@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Checker</title>
+</head>
+<body>
+    <h1>🧠 Mental Health Status Check</h1>
+    <form id="mentalHealthForm">
+        <label>Anxiety (1-5):</label>
+        <input type="number" name="anxiety" min="1" max="5" required>
+        
+        <label>Stress (1-5):</label>
+        <input type="number" name="stress" min="1" max="5" required>
+
+        <label>Anger (1-5):</label>
+        <input type="number" name="anger" min="1" max="5" required>
+
+        <label>Sleep Issues (1-5):</label>
+        <input type="number" name="sleep_issues" min="1" max="5" required>
+
+        <label>Mood Swings (1-5):</label>
+        <input type="number" name="mood_swings" min="1" max="5" required>
+
+        <label>Depression (1-5):</label>
+        <input type="number" name="depression" min="1" max="5" required>
+
+        <button type="submit">Check Status</button>
+    </form>
+    <p id="result"></p>
+    <script>
+        document.getElementById("mentalHealthForm").onsubmit = function(event) {
+            event.preventDefault(); // Prevent form refresh
+    
+            let formData = new FormData(event.target);
+    
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json()) // Ensure JSON response
+            .then(data => {
+                if (data.status) {
+                    document.getElementById("result").innerText = "Mental Health Status: " + data.status;
+                } else if (data.error) {
+                    document.getElementById("result").innerText = "Error: " + data.error;
+                } else {
+                    document.getElementById("result").innerText = "Unexpected response from server.";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("result").innerText = "Error connecting to server.";
+            });
+        };
+    </script>
+    
+</body>
+</html>
