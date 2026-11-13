@@ -5,7 +5,8 @@ import numpy as np
 np.random.seed(42)
 
 # Number of samples
-num_samples = 1000
+#num_samples = 1000#
+num_samples = 10000
 
 # Generate random values for features (1 to 5 scale)
 data = {

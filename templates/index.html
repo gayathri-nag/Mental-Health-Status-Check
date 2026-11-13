@@ -1,60 +1,883 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mental Health Checker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Health Status Check</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #c4a9ed, #a98bd9, #d2c0f0);
+    min-height: 100vh;
+    padding: 35px 25px;
+    color: #302047;
+}
+
+.container {
+    max-width: 1350px;
+    margin: auto;
+}
+
+/* HEADER */
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 28px 15px;
+    background: rgba(255,255,255,0.94);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(55,30,90,0.12);
+}
+
+.header-icon {
+    font-size: 42px;
+    margin-bottom: 8px;
+}
+
+h1 {
+    color: #56328c;
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: #75668b;
+    font-size: 14px;
+}
+
+/* MAIN THREE COLUMN LAYOUT */
+
+.main-layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.8fr 0.9fr;
+    gap: 22px;
+    align-items: start;
+}
+
+.side-card,
+.assessment-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 9px 28px rgba(55,30,90,0.13);
+}
+
+.side-card {
+    position: sticky;
+    top: 20px;
+}
+
+.side-card h2 {
+    color: #603c98;
+    font-size: 19px;
+    margin-bottom: 16px;
+}
+
+.side-card p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #756783;
+}
+
+.side-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.side-divider {
+    height: 1px;
+    background: #e9e0f5;
+    margin: 20px 0;
+}
+
+/* RATING GUIDE */
+
+.rating-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: #655477;
+}
+
+.rating-number {
+    min-width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: #eee5fb;
+    color: #633d9b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* ASSESSMENT */
+
+.assessment-card h2 {
+    color: #56328c;
+    font-size: 21px;
+    margin-bottom: 8px;
+}
+
+.assessment-subtitle {
+    color: #8a7b9e;
+    font-size: 13px;
+    margin-bottom: 22px;
+}
+
+.progress-section {
+    margin-bottom: 25px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    color: #76668b;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    height: 9px;
+    background: #eee7f7;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #8c5bc6, #59328f);
+    transition: width 0.3s ease;
+}
+
+.question {
+    margin-bottom: 17px;
+    padding: 17px;
+    background: #faf8fe;
+    border: 1px solid #e7def3;
+    border-radius: 13px;
+}
+
+.question h3 {
+    font-size: 15px;
+    color: #493363;
+    margin-bottom: 7px;
+}
+
+.question .subtitle {
+    font-size: 12px;
+    color: #8a7d9d;
+    margin-bottom: 13px;
+}
+
+.options {
+    display: flex;
+    gap: 9px;
+}
+
+.options input {
+    display: none;
+}
+
+.options label {
+    flex: 1;
+    text-align: center;
+    padding: 11px 4px;
+    border: 1px solid #d9c9ed;
+    border-radius: 9px;
+    cursor: pointer;
+    color: #66537e;
+    font-weight: 600;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.options label:hover {
+    background: #eee5fa;
+}
+
+.options input:checked + label {
+    background: #68429e;
+    color: white;
+    border-color: #68429e;
+    box-shadow: 0 3px 9px rgba(80,45,130,0.2);
+}
+
+.scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #a094ae;
+    margin-top: 8px;
+}
+
+/* BUTTONS */
+
+button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #7650ae, #4f2d80);
+    color: white;
+    border: none;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #603a96, #402168);
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* RESULT */
+
+#result {
+    display: none;
+    margin-top: 25px;
+    padding: 28px;
+    border-radius: 18px;
+    text-align: center;
+    background: #f4efff;
+    border: 1px solid #dfd0f5;
+    box-shadow: 0 8px 24px rgba(55,30,90,0.10);
+}
+
+#result h2 {
+    margin-bottom: 12px;
+    color: #6041a6;
+    font-size: 23px;
+}
+
+#result p {
+    line-height: 1.7;
+    color: #665b7c;
+    font-size: 14px;
+}
+
+#result.low-risk {
+    background: #eaf8ef;
+    border-color: #b9e5c7;
+}
+
+#result.low-risk h2 {
+    color: #218449;
+}
+
+#result.medium-risk {
+    background: #fff5e5;
+    border-color: #f5d49b;
+}
+
+#result.medium-risk h2 {
+    color: #bd790c;
+}
+
+#result.high-risk {
+    background: #fff0f0;
+    border-color: #f2bcbc;
+}
+
+#result.high-risk h2 {
+    color: #d13d3d;
+}
+
+.recommendation-section {
+    max-width: 850px;
+    margin: 22px auto 0;
+    padding: 22px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 13px;
+    text-align: left;
+}
+
+.recommendation-section h3 {
+    color: #493363;
+    font-size: 16px;
+    margin-bottom: 14px;
+}
+
+#recommendations {
+    padding-left: 22px;
+    color: #665b7c;
+}
+
+#recommendations li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+#retakeBtn {
+    max-width: 350px;
+    display: none;
+    margin: 22px auto 0;
+    background: #3f2b5c;
+}
+
+/* FOOTER */
+
+.disclaimer {
+    text-align: center;
+    color: #55416e;
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 25px auto 0;
+    max-width: 850px;
+    padding: 15px;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 1000px) {
+    .main-layout {
+        grid-template-columns: 1fr 1.7fr;
+    }
+
+    .right-sidebar {
+        position: static;
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 18px 12px;
+    }
+
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .side-card {
+        position: static;
+    }
+
+    .right-sidebar {
+        grid-column: auto;
+    }
+
+    .header {
+        padding: 22px 12px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+
+    .assessment-card,
+    .side-card {
+        padding: 19px;
+    }
+
+    .options {
+        gap: 6px;
+    }
+
+    .options label {
+        padding: 11px 3px;
+    }
+}
+</style>
 </head>
+
 <body>
-    <h1>🧠 Mental Health Status Check</h1>
-    <form id="mentalHealthForm">
-        <label>Anxiety (1-5):</label>
-        <input type="number" name="anxiety" min="1" max="5" required>
-        
-        <label>Stress (1-5):</label>
-        <input type="number" name="stress" min="1" max="5" required>
 
-        <label>Anger (1-5):</label>
-        <input type="number" name="anger" min="1" max="5" required>
+<div class="container">
 
-        <label>Sleep Issues (1-5):</label>
-        <input type="number" name="sleep_issues" min="1" max="5" required>
+    <header class="header">
+        <div class="header-icon">🧠</div>
+        <h1>Mental Health Status Check</h1>
+        <p>A simple space to reflect on your emotional well-being</p>
+    </header>
 
-        <label>Mood Swings (1-5):</label>
-        <input type="number" name="mood_swings" min="1" max="5" required>
+    <div class="main-layout">
 
-        <label>Depression (1-5):</label>
-        <input type="number" name="depression" min="1" max="5" required>
+        <!-- LEFT SIDEBAR -->
 
-        <button type="submit">Check Status</button>
-    </form>
-    <p id="result"></p>
-    <script>
-        document.getElementById("mentalHealthForm").onsubmit = function(event) {
-            event.preventDefault(); // Prevent form refresh
-    
-            let formData = new FormData(event.target);
-    
-            fetch('/predict', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json()) // Ensure JSON response
-            .then(data => {
-                if (data.status) {
-                    document.getElementById("result").innerText = "Mental Health Status: " + data.status;
-                } else if (data.error) {
-                    document.getElementById("result").innerText = "Error: " + data.error;
-                } else {
-                    document.getElementById("result").innerText = "Unexpected response from server.";
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                document.getElementById("result").innerText = "Error connecting to server.";
-            });
-        };
-    </script>
-    
+        <aside class="side-card">
+
+            <div class="side-icon">💜</div>
+
+            <h2>About This Project</h2>
+
+            <p>
+                Mental Health Status Check is an educational
+                project designed to help users reflect on
+                different aspects of their emotional well-being.
+            </p>
+
+            <div class="side-divider"></div>
+
+            <h2>How It Works</h2>
+
+            <p>
+                Answer six questions related to anxiety,
+                stress, anger, sleep, mood changes and low mood.
+            </p>
+
+            <div class="side-divider"></div>
+
+            <h2>Quick Reminder</h2>
+
+            <p>
+                Take your time. Select the option that best
+                represents your experience. There are no
+                right or wrong answers.
+            </p>
+
+            <div class="side-divider"></div>
+
+            <p>
+                ✨ Your well-being matters. Make time for yourself.
+            </p>
+
+        </aside>
+
+
+        <!-- CENTER ASSESSMENT -->
+
+        <main class="assessment-card">
+
+            <h2>📝 Your Assessment</h2>
+
+            <p class="assessment-subtitle">
+                Answer all six questions to view your result.
+            </p>
+
+            <div class="progress-section">
+
+                <div class="progress-info">
+                    <span>Assessment Progress</span>
+                    <span id="progressText">0 / 6 completed</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+            </div>
+
+            <form id="assessmentForm">
+
+                <div id="questions"></div>
+
+                <button type="submit" id="submitBtn">
+                    Check My Status
+                </button>
+
+            </form>
+
+        </main>
+
+
+        <!-- RIGHT SIDEBAR -->
+
+        <aside class="side-card right-sidebar">
+
+            <div class="side-icon">📊</div>
+
+            <h2>Rating Guide</h2>
+
+            <p style="margin-bottom:18px;">
+                Choose a number between 1 and 5 for each question.
+            </p>
+
+            <div class="rating-item">
+                <span class="rating-number">1</span>
+                <span>Never / Very Low</span>
+            </div>
+
+            <div class="rating-item">
+                <span class="rating-number">2</span>
+                <span>Rarely / Low</span>
+            </div>
+
+            <div class="rating-item">
+                <span class="rating-number">3</span>
+                <span>Sometimes / Moderate</span>
+            </div>
+
+            <div class="rating-item">
+                <span class="rating-number">4</span>
+                <span>Often / High</span>
+            </div>
+
+            <div class="rating-item">
+                <span class="rating-number">5</span>
+                <span>Always / Very High</span>
+            </div>
+
+            <div class="side-divider"></div>
+
+            <h2>Wellness Reminder 🌿</h2>
+
+            <p>
+                Stay hydrated, maintain a healthy sleep routine,
+                take breaks and connect with people you trust.
+            </p>
+
+        </aside>
+
+    </div>
+
+
+    <!-- FULL WIDTH RESULT -->
+
+    <div id="result">
+
+        <h2 id="status"></h2>
+
+        <p id="message"></p>
+
+        <div class="recommendation-section" id="recommendationSection">
+
+            <h3>💡 Helpful Suggestions</h3>
+
+            <ul id="recommendations"></ul>
+
+        </div>
+
+        <button type="button" id="retakeBtn">
+            ↻ Retake Assessment
+        </button>
+
+    </div>
+
+
+    <footer class="disclaimer">
+        <strong>Disclaimer:</strong>
+        This tool is an educational project using synthetic data.
+        It does not provide a medical diagnosis or replace
+        professional mental health advice. If you are experiencing
+        distress, consider contacting a qualified mental health
+        professional.
+    </footer>
+
+</div>
+
+
+<script>
+
+const questions = [
+    {
+        name: "anxiety",
+        title: "Anxiety",
+        description: "How often do you feel anxious or worried?"
+    },
+    {
+        name: "stress",
+        title: "Stress",
+        description: "How much stress do you experience?"
+    },
+    {
+        name: "anger",
+        title: "Anger",
+        description: "How often do you experience anger?"
+    },
+    {
+        name: "sleep_issues",
+        title: "Sleep Issues",
+        description: "How frequently do you experience sleep problems?"
+    },
+    {
+        name: "mood_swings",
+        title: "Mood Swings",
+        description: "How often do you experience mood changes?"
+    },
+    {
+        name: "depression",
+        title: "Low Mood",
+        description: "How often do you experience sadness or low mood?"
+    }
+];
+
+const questionsContainer =
+    document.getElementById("questions");
+
+const form =
+    document.getElementById("assessmentForm");
+
+const resultBox =
+    document.getElementById("result");
+
+const submitBtn =
+    document.getElementById("submitBtn");
+
+const retakeBtn =
+    document.getElementById("retakeBtn");
+
+
+// Generate questions
+
+questions.forEach((q, index) => {
+
+    let options = "";
+
+    for (let i = 1; i <= 5; i++) {
+
+        options += `
+            <input
+                type="radio"
+                id="${q.name}_${i}"
+                name="${q.name}"
+                value="${i}"
+            >
+
+            <label for="${q.name}_${i}">
+                ${i}
+            </label>
+        `;
+    }
+
+    questionsContainer.innerHTML += `
+
+        <div class="question">
+
+            <h3>${index + 1}. ${q.title}</h3>
+
+            <p class="subtitle">
+                ${q.description}
+            </p>
+
+            <div class="options">
+                ${options}
+            </div>
+
+            <div class="scale">
+                <span>Never / Low</span>
+                <span>Always / High</span>
+            </div>
+
+        </div>
+    `;
+});
+
+
+// Progress bar
+
+function updateProgress() {
+
+    const completed = questions.filter(q =>
+        document.querySelector(
+            `input[name="${q.name}"]:checked`
+        )
+    ).length;
+
+    document.getElementById("progressText").textContent =
+        `${completed} / 6 completed`;
+
+    document.getElementById("progressFill").style.width =
+        `${(completed / 6) * 100}%`;
+}
+
+form.addEventListener("change", updateProgress);
+
+
+// Recommendations
+
+const recommendationData = {
+
+    "Low Risk": [
+        "Continue maintaining a regular sleep routine.",
+        "Make time for activities and hobbies you enjoy.",
+        "Stay connected with friends, family and supportive people.",
+        "Continue checking in with your emotional well-being."
+    ],
+
+    "Medium Risk": [
+        "Try taking short breaks during stressful activities.",
+        "Maintain a consistent sleep and daily routine.",
+        "Consider sharing your feelings with someone you trust.",
+        "If these feelings continue or affect daily life, consider speaking with a qualified mental health professional."
+    ],
+
+    "High Risk": [
+        "Consider reaching out to a trusted person for support.",
+        "Try not to manage overwhelming feelings entirely on your own.",
+        "Consider speaking with a qualified mental health professional soon.",
+        "If you feel in immediate danger or might harm yourself, seek urgent help from local emergency services or a nearby hospital."
+    ]
+};
+
+
+// Display result
+
+function displayResult(status, message) {
+
+    resultBox.style.display = "block";
+
+    resultBox.classList.remove(
+        "low-risk",
+        "medium-risk",
+        "high-risk"
+    );
+
+    document.getElementById("status").textContent = status;
+
+    document.getElementById("message").textContent = message;
+
+    const statusClass = status
+        .toLowerCase()
+        .replace(" ", "-");
+
+    resultBox.classList.add(statusClass);
+
+    const recommendationList =
+        document.getElementById("recommendations");
+
+    recommendationList.innerHTML = "";
+
+    if (recommendationData[status]) {
+
+        recommendationData[status].forEach(item => {
+
+            const li = document.createElement("li");
+
+            li.textContent = item;
+
+            recommendationList.appendChild(li);
+
+        });
+
+        document.getElementById(
+            "recommendationSection"
+        ).style.display = "block";
+
+    } else {
+
+        document.getElementById(
+            "recommendationSection"
+        ).style.display = "none";
+    }
+
+    retakeBtn.style.display = "block";
+
+    resultBox.scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+
+// Submit assessment
+
+form.addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    if (questions.some(q => !formData.get(q.name))) {
+
+        alert("Please answer all six questions.");
+
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Checking...";
+
+    try {
+
+        const response = await fetch("/predict", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            displayResult(
+                "Unable to process",
+                data.error || "Something went wrong. Please try again."
+            );
+
+            resultBox.classList.remove(
+                "low-risk",
+                "medium-risk",
+                "high-risk"
+            );
+
+        } else {
+
+            displayResult(
+                data.status,
+                data.message
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error("Prediction error:", error);
+
+        alert("Unable to connect to the server. Please try again.");
+
+    } finally {
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Check My Status";
+
+    }
+
+});
+
+
+// Retake assessment
+
+retakeBtn.addEventListener("click", function() {
+
+    form.reset();
+
+    updateProgress();
+
+    resultBox.style.display = "none";
+
+    resultBox.classList.remove(
+        "low-risk",
+        "medium-risk",
+        "high-risk"
+    );
+
+    document.getElementById("status").textContent = "";
+
+    document.getElementById("message").textContent = "";
+
+    document.getElementById("recommendations").innerHTML = "";
+
+    retakeBtn.style.display = "none";
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Check My Status";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+});
+
+</script>
+
 </body>
 </html>
