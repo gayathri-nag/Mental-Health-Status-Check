@@ -5,7 +5,6 @@ An ML-based web application that allows users to reflect on different aspects of
 ## 🌐 Live Demo 
 https://github.com/gayathri-nag/Mental-Health-Status-Analysis.git
 
-/*Coming soon — deployment link will be added after hosting the application.*/
 
 ## 📌 Project Overview
 
