@@ -3,8 +3,7 @@
 An ML-based web application that allows users to reflect on different aspects of their emotional well-being through a simple interactive assessment.
 
 ## 🌐 Live Demo 
-https://github.com/gayathri-nag/Mental-Health-Status-Analysis.git
-
+[Click here to use Mental Health Status Check](https://mental-health-status-analysis.onrender.com/)
 
 ## 📌 Project Overview
 
